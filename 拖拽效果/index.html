@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>鼠标拖拽</title>
+		<style type="text/css">
+			div {
+				width: 300px;
+				/* background-color: darkcyan; */
+				position: absolute;
+				top: 0;
+			}
+		</style>
+	</head>
+	<body ondragstart="return false">
+		<div>
+			<img src="img/草帽.jpg" style="width:100%;">
+		</div>
+	</body>
+	<script>
+		var el = document.querySelector("div");
+		console.log(el);
+		var w = 0,
+			z = 0,  //最开始元素的偏移量
+			nx = 0,ny = 0; //用于记录鼠标松开时的坐标
+		el.onmousedown = function(e) {
+
+			var ox = e.clientX,
+				oy = e.clientY;
+			
+			
+			// 只负责鼠标按下后移动过程中偏移量，不管一开始的偏移量，一开始的偏移量要在
+			 // 鼠标松开时记录,
+			 // 注意:
+			 // 鼠标其实的偏移量不能通过el.style.left加偏移量时叠加,要在第一句加!!!!!!!
+			el.onmousemove = function(e) {
+
+				w = e.clientX - ox + nx;
+				z = e.clientY - oy + ny;
+				if(w < 0){
+					w = 0;
+				}
+				if(z < 0){
+					z=0;
+				}
+				if(w >  window.innerWidth - el.offsetWidth) {
+					w =  window.innerWidth - el.offsetWidth;
+				}
+				if(z > window.innerHeight - el.offsetHeight) {
+					z =   window.innerHeight - el.offsetHeight;
+				}
+				el.style.left = w + "px";
+				el.style.top = z + "px";
+				//ox = e.clientX;
+				//oy = e.clientY;
+
+			}
+			el.onmouseup = function(e) {
+				
+				// 记录放开鼠标是的位置
+				nx = el.offsetLeft;
+				ny = el.offsetTop;
+				el.onmousemove = null;
+				console.log("div松开");
+			}
+			document.onmouseup = function() {
+				el.onmousemove = null;
+				console.log("document松开");
+			}
+		}
+	</script>
+</html>

@@ -1,0 +1,98 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>倒计时</title>
+	<style>
+		*{
+			padding: 0;
+			margin: 0;
+			box-sizing: border-box;
+		}
+		.box{
+			width: 100%;
+			height: 600px;
+			display: flex;
+			align-items: center;
+		}
+		.container{
+			border-radius: 10px;
+			width: 400px;
+			margin: 0 auto;
+			display: flex;
+			background-color: orange;
+		}
+		.container span{
+			border-radius: 4px;
+			flex: 2;
+			margin: 20px;
+			line-height: 30px;
+			text-align: center;
+			color: white;
+			font-weight: 600;
+			background-color: darkcyan;
+		}
+	</style>
+</head>
+<body>
+	<div class="box">
+		<div class="container">
+			<!-- 天 -->
+			<span id="day">00天</span>
+			<!-- 小时 -->
+			<span id="hour">00时</span>
+			<!-- 分钟 -->
+			<span id="minute">00分</span>
+			<!-- 秒 -->
+			<span id="second">00秒</span>
+		</div>
+	</div>
+	<script>
+		var Day = document.getElementById("day"),
+			Hour = document.getElementById("hour"),
+			Minute = document.getElementById("minute"),
+			Second = document.getElementById("second");
+
+		
+		var clk = setInterval(function() {
+			count();
+		},1000);
+		
+		
+		// 计算距离目标时间的时分秒
+		function count() {
+			var end = new Date("2019-10-1");
+			var start = new Date();
+			// 两个日期详见返回值为总共的毫秒数
+			var totalTime = end - start;  //总时间毫秒差
+			var totalSecond = Math.floor(totalTime/1000);  //总共的秒数
+			var day,hour,minute,second;
+			
+			day = Math.floor(totalSecond / 60 / 60 / 24);
+			// 补0
+			if(day < 10) {
+				day = "0" + day;
+			}
+			hour = Math.floor(totalSecond / 60 / 60 % 24);
+			if(hour < 10) {
+				hour = "0" + hour;
+			}
+			minute = Math.floor(totalSecond / 60 % 60);
+			if(minute < 10) {
+				minute = "0" + minute;
+			}
+			second = Math.floor(totalSecond % 60);
+			if(second < 10) {
+				second = "0" + second;
+			}
+			Day.innerHTML = day + "天";
+			Hour.innerHTML = hour + "时";
+			Minute.innerHTML = minute + "分";
+			Second.innerHTML =second + "秒";
+		}
+		count();
+	</script>
+</body>
+</html>

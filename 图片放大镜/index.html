@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>图片放大镜</title>
+		<style>
+			* {
+				padding: 0;
+				margin: 0;
+				box-sizing: border-box;
+			}
+
+			.box {
+				width: 100%;
+			}
+
+			.box .container {
+				width: 1200px;
+				margin: 0 auto;
+				display: flex;
+				align-items: center;
+				height: 600px;
+			}
+
+			.box .container .small {
+				width: 300px;
+				/* height: auto; */
+				height: 168px;
+				background-color: darkcyan;
+				overflow: hidden;
+				margin-right: 40px;
+				position: relative;
+			}
+
+			.box .container .small img {
+				width: 100%;
+			}
+
+			.box .container .small .cover {
+				width: 60px;
+				height: 60px;
+				background-color: rgba(255, 255, 0, .2);
+				position: absolute;
+				top: 0;
+				left: 0;
+				visibility: hidden;
+			}
+
+			.box .container .big {
+				width: 300px;
+				height: 300px;
+				position: relative;
+				overflow: hidden;
+				display: none;
+			}
+
+			.box .container .big img {
+				width: 1500px;
+				position: absolute;
+				top: 0;
+				left: 0;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="box">
+			<div class="container">
+				<div class="small">
+					<img src="img/1.jpg" alt="">
+					<div class="cover"></div>
+				</div>
+				<div class="big">
+					<img src="img/1.jpg" alt="">
+				</div>
+			</div>
+		</div>
+		<script>
+			
+			
+			// 小图片与大图片宽度之比等于放大区域(小方块)宽度与大图片盒子宽度之比,
+			// 另外在进行偏移量映射时将小方块的偏移量乘以倍数即可
+			
+			var small = document.querySelector(".box .container .small"),
+				big = document.querySelector(".box .container .big"),
+				cover = document.querySelector(".box .container .small .cover"),
+				img = document.querySelector(".box .container .big img"),
+				maxLeft = small.offsetWidth - cover.offsetWidth,
+				maxTop = small.offsetHeight - cover.offsetHeight;
+
+				console.log(cover.offsetHeight);
+				
+				console.log(maxLeft);
+				console.log(maxTop);
+
+			//   1.鼠标滑过小图片的位置出现小方块儿,大图片盒子也出现
+
+			small.onmouseover = function(e) {
+				cover.style.visibility = "visible";
+				big.style.display = "block";
+				var ox = e.clientX;
+				var oy = e.clientY;
+				var oldtop = e.clientY - small.offsetTop - cover.offsetHeight/2;
+				// 鼠标距离小盒子上边的距离
+				var oldleft = e.clientX - small.offsetLeft - cover.offsetWidth/2;
+				// 鼠标距离小盒子左边的距离
+
+				cover.style.top = oldtop + "px";
+				// 使鼠标在小方块中间
+				cover.style.left = oldleft + "px";				
+				// 鼠标移动
+				small.onmousemove = function(e) {
+					
+					// 鼠标移动改变的偏移量
+					var changeX = e.clientX - ox;
+					var changeY = e.clientY - oy;
+					
+					// 方块新的偏移量
+					var newtop = oldtop + changeY;
+					var newleft = oldleft + changeX;
+					
+					// 限制小方块儿在小图片内
+					if(newtop < 0) {
+						newtop = 0;
+					}
+					if(newleft < 0) {
+						newleft = 0;
+					}
+					if(newtop >= maxTop) {
+						newtop = maxTop;
+					}
+					if(newleft >= maxLeft) {
+						newleft = maxLeft;
+					}
+					
+					
+					cover.style.top = newtop + "px";
+					cover.style.left = newleft + "px";
+					
+					img.style.left ="-" + newleft*5 + "px";
+					img.style.top = "-" +  newtop*5 + "px";
+				}
+
+			}
+
+			small.onmouseout = function() {
+				cover.style.visibility = "hidden";
+				big.style.display = "none";
+			}
+
+			//   2.鼠标移动小方块儿跟着动
+			//   3.将小方块距离小图片盒子左边上边的距离映射到大图片的偏移上去(60:300 = 1:5 )的关系
+		</script>
+	</body>
+</html>
